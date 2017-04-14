@@ -1,3 +1,4 @@
+/* ---Strona--- */
 .wrapper {
 	width: 100vw;
 	height: 100vh;
@@ -6,6 +7,7 @@
 	overflow-x: hidden;
 }
 
+/* ---Pole--- */
 .div_krata {
 	width: 45%;
 	height: 95%;
@@ -25,6 +27,13 @@
     vertical-align:middle;
 }
 
+.actor_ground {
+	background-color: black;
+	color: white;
+}
+
+
+/* ---Kontrola--- */
 .controls {
 	padding: 10px;
 	width: 100%;
@@ -41,7 +50,25 @@
 	margin-left: 65px;
 }
 
-.actor_ground {
-	background-color: black;
-	color: white;
+
+/* ---Szczegoly pola--- */
+.ground_details {
+	padding: 15px;
 }
+
+.ground_details > .name {
+	font-weight: bold;
+}
+
+.ground_details > .value {
+	font-style: italic;
+	margin-left: 10px;
+}
+
+.ground_details > .value > li{
+	margin-left: 20px;
+}
+
+
+
+

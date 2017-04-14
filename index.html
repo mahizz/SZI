@@ -146,13 +146,22 @@
 					<button type="button" id="button_move_right" class="btn btn-default button_control"> --> </button>
 				</div>
 				<div class="ground_details">
-					<span>Typ pola: </span><span>%ground_type%</span></br>
-					<span>Koszt przejechania: </span><span>%value%</span></br>
-					<span>Akcje: </span><br>
-					<ul>
-						<li> Akcja1 </li>
-						<li> Akcja2 </li>
-						<li> Akcja3 </li>
+					<span class="name">Typ pola: </span>
+					<span class="value" id="details_ground_type">%ground_type%</span></br>
+					
+					<span class="name">Kordynaty: </span>
+					<span class="value" id="details_cords">%cords%</span></br>
+
+					<span class="name">ID zdjecia: </span>
+					<span class="value" id="details_image_id">%image_id%</span></br>
+
+					<span class="name">Koszt przejechania: </span>
+					<span class="value" id="details_cost">%cost%</span></br>
+
+					<span class="name">Akcje: </span><br>
+					<ul class="value" id="action_list">
+						<li> Brak </li>
+						<!-- action_list here -->
 					</ul>
 				</div>
 			</div>
@@ -160,7 +169,7 @@
 				<h2>Debugger:</h2>
 				<div id="debug-wrapper">
 					<ul id="debug-list">
-						<!-- debug here 0-->
+						<!-- debug here -->
 					</ul>
 				</div>
 			</div>

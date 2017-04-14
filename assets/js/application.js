@@ -31,7 +31,10 @@ var init_pole = function(min, max) {
 	for(let x = 0; x <= max_x; x++) {
 		pole[x] = Array();
 		for(let y = 0; y <= max_y; y++) {
-			pole[x][y] = Math.floor(Math.random() * (max - min + 1)) + min;
+			pole[x][y] = {
+				cost: (Math.floor(Math.random() * (max - min + 1)) + min),
+				image: (Math.floor(Math.random() * 100))
+			};
 		}
 	}
 }
@@ -40,7 +43,7 @@ var show_pole = function(dataset) {
 	for(let x = 0; x <= max_x; x++) {
 		for(let y = 0; y <= max_y; y++) {
 			let id = '#' + x + 'x' + y;
-			let val = dataset[x][y];
+			let val = dataset[x][y].cost;
 			$(id).html(val);
 		}
 	}
@@ -48,7 +51,7 @@ var show_pole = function(dataset) {
 
 var get_val = function(cord) {
 	let tmp = cord.split('x');
-	return pole[tmp[0]][tmp[1]];
+	return pole[tmp[0]][tmp[1]].cost;
 }
 
 var show_actor = function(actor_pos) {
@@ -57,12 +60,14 @@ var show_actor = function(actor_pos) {
 	let id = '#' + cord;
 	$(id).html('X');
 	$(id).addClass('actor_ground');
+
+	get_details(actor_pos, pole);
 }
 
 var clear_actor = function(pos, dataset) {
 	let cord = pos.x + 'x' + pos.y;
 	let id = '#' + cord;
-	let val = dataset[pos.x][pos.y];
+	let val = dataset[pos.x][pos.y].cost;
 	$(id).html(val);
 	$(id).removeClass('actor_ground');
 }
@@ -89,6 +94,37 @@ var move_actor = function(direction) {
 
 	clear_actor(last_pos, pole);
 	show_actor(new_pos);
+}
+
+var get_details = function(pos, dataset) {
+	let ground_type, cords, image_id, cost, actions;
+
+	cords = pos.x + 'x' + pos.y;
+	ground_type = "???";
+	image_id = dataset[pos.x][pos.y].image;
+	cost = dataset[pos.x][pos.y].cost;
+	actions = Array();
+
+	$('#details_ground_type').html('');
+	$('#details_cords').html('');
+	$('#details_image_id').html('');
+	$('#details_cost').html('');
+	$('#action_list').html('');
+
+	$('#details_ground_type').html(ground_type);
+	$('#details_cords').html(cords);
+	$('#details_image_id').html(image_id);
+	$('#details_cost').html(cost);
+
+	if(actions.length == 0) {
+		$('#action_list').append('<li> Brak </li>');
+	} else {
+		actions.forEach((row, index, arr) => {
+			let elem = '<li>' + row + '</li>';
+			$('#action_list').append(elem);
+		});
+	}
+	
 }
 
 
@@ -131,7 +167,6 @@ $('#button_move_down').on('click', function(){
 });
 
 $(document).keydown(function(e) {
-	console.log(e);
     switch(e.which){
         case 37: 
         	$("#button_move_left").click();
