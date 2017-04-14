@@ -1,0 +1,47 @@
+.wrapper {
+	width: 100vw;
+	height: 100vh;
+	margin: 0 auto;
+	padding: 25px;
+	overflow-x: hidden;
+}
+
+.div_krata {
+	width: 45%;
+	height: 95%;
+	float: left;
+	background-color: rgb(210,250,190);
+}
+
+#krata {
+	margin: 25px auto;
+}
+
+#krata > tbody > tr > td {
+	border: solid 1px black;
+	width: 30px;
+	height: 30px;
+	text-align:center; 
+    vertical-align:middle;
+}
+
+.controls {
+	padding: 10px;
+	width: 100%;
+	height: 130px;
+}
+
+.controls > .button_control {
+	height: 45px;
+	width: 45px;
+	margin: 5px;
+}
+
+.controls > #button_move_up {
+	margin-left: 65px;
+}
+
+.actor_ground {
+	background-color: black;
+	color: white;
+}
