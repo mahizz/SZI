@@ -5,11 +5,21 @@
 max_x = 9;
 max_y = 9;
 pole = Array();
+actor_in_move = false;
 actor_pos = {
 	x: 0,
 	y: 0
 }
 
+
+/*=================================
+=            Requaries            =
+=================================*/
+
+$.getScript('assets/js/rest.js', function(){
+    // script is now loaded and executed.
+    // put your dependent JS here.
+});
 
 /*=============================================
 =            Functions for website            =
@@ -96,6 +106,40 @@ var move_actor = function(direction) {
 	show_actor(new_pos);
 }
 
+var deleyed_loop_move_actor = function(i, action_list) {
+	if(i == action_list.length) {
+		actor_in_move = false;
+		return false;
+	} else {
+		move_actor(action_list[i]);
+		setTimeout(function(){ deleyed_loop_move_actor(++i, action_list); }, 1000);
+	}
+}
+
+var move_actor_to = function(target_pos, dataset) {
+	console.log('Moving to', target_pos);
+
+	let target = target_pos;
+	let current = actor_pos;
+	let data = dataset;
+
+	actor_in_move = true;
+
+	calcMove({
+		target: target,
+		current: current,
+		dataset: data
+	}, (response) => {
+
+		if(response.status == 'ok') {
+			deleyed_loop_move_actor(0, response.data.actionList);
+		} else {
+			actor_in_move = false;
+		}
+
+	});
+}
+
 var get_details = function(pos, dataset) {
 	let ground_type, cords, image_id, cost, actions;
 
@@ -134,36 +178,44 @@ var get_details = function(pos, dataset) {
 
 $('.pole').on('click', function(){
 	let cord = $(this).prop('id');
-	let val = get_val(cord)
-	log("Click event: " + cord + " (Cost: " + val + ")");
+	let val = get_val(cord);
+	let tmp = cord.split('x');
+	let pos = { x: tmp[0], y: tmp[1] };
+
+	if(!actor_in_move)
+		move_actor_to(pos, pole);
 });
 
 $('#button_move_left').on('click', function(){
-	move_actor({
-		axis: 'x',
-		value: -1
-	});
+	if(!actor_in_move)
+		move_actor({
+			axis: 'x',
+			value: -1
+		});
 });
 
 $('#button_move_right').on('click', function(){
-	move_actor({
-		axis: 'x',
-		value: 1
-	});
+	if(!actor_in_move)
+		move_actor({
+			axis: 'x',
+			value: 1
+		});
 });
 
 $('#button_move_up').on('click', function(){
-	move_actor({
-		axis: 'y',
-		value: -1
-	});
+	if(!actor_in_move)
+		move_actor({
+			axis: 'y',
+			value: -1
+		});
 });
 
 $('#button_move_down').on('click', function(){
-	move_actor({
-		axis: 'y',
-		value: 1
-	});
+	if(!actor_in_move)
+		move_actor({
+			axis: 'y',
+			value: 1
+		});
 });
 
 $(document).keydown(function(e) {
