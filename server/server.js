@@ -4,7 +4,7 @@ var bodyParser  = require('body-parser')
 
 //Libs
 require('./lib/prototypes')
-
+var movment = require('./controllers/movment').Movment
 //Variales
 var _port = 3088
 
@@ -46,27 +46,25 @@ app.post('/api/calcMove', (req, res) => {
 	curr = req.body.current;
 	target = req.body.target;
 	dataset = req.body.dataset;
+	direction = req.body.direction;
 
-	console.log("Dataset: ", dataset)
+	//console.log("Dataset: ", dataset[0][0])
+	//console.log("direction: ",direction)
 	console.log("Current position: ", curr)
 	console.log("Target position: ", target)
-	
+	let start = {
+		x: parseInt(curr.x),
+		y: parseInt(curr.y),
+		direction: direction
+	}
+
+	//console.log(movment(dataset,start,target))
+
+
 
 	//Sending test data
 	res.json({
-		actionList: [
-			{axis: 'x', value: 1},
-			{axis: 'x', value: 1},
-			{axis: 'x', value: 1},
-			{axis: 'x', value: 1},
-			{axis: 'y', value: 1},
-			{axis: 'y', value: 1},
-			{axis: 'y', value: 1},
-			{axis: 'y', value: 1},
-			{axis: 'x', value: -1},
-			{axis: 'x', value: -1},
-			{axis: 'y', value: -1}
-		]		
+		actionList: movment(dataset,start,target)		
 	})
 })
 
