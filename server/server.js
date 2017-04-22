@@ -48,8 +48,7 @@ app.post('/api/calcMove', (req, res) => {
 	dataset = req.body.dataset;
 	direction = req.body.direction;
 
-	//console.log("Dataset: ", dataset[0][0])
-	//console.log("direction: ",direction)
+	console.log("direction: ",direction)
 	console.log("Current position: ", curr)
 	console.log("Target position: ", target)
 	let start = {
@@ -57,10 +56,6 @@ app.post('/api/calcMove', (req, res) => {
 		y: parseInt(curr.y),
 		direction: direction
 	}
-
-	//console.log(movment(dataset,start,target))
-
-
 
 	//Sending test data
 	res.json({

@@ -38,16 +38,13 @@ var Movment = function Movment(dataset,start,goal){
 
 
    			//(_.find(close, function(item) { return item.state == temp.state }) ){
-   			let test = open.search(temp.state)
-
-			
+   			let test = open.search(temp.state)	
 
    			let some = find(close,temp.state)
    			if(test == null &&  !find(close,temp.state)){
    				open.push(temp)
    			}else if(test != null){
-
-   				console.log("To do zamien")
+   				console.log("To DO ")
    			}
 
    			
