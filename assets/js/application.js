@@ -6,6 +6,8 @@ max_x = 9;
 max_y = 9;
 pole = Array();
 actor_in_move = false;
+server_status = false;
+actor_direction = 'S';
 actor_pos = {
 	x: 0,
 	y: 0
@@ -35,6 +37,18 @@ var log = function() {
 	var args = Array.prototype.slice.call(arguments);
 	args.forEach((msg) => { debug(msg); });
 	console.log.apply(console, arguments);
+}
+
+var check_server_status = function() {
+	checkStatus((res) => {
+		if(res.status == 'ok') {
+			server_status = true;
+			$('#server_status').html('Online ( uptime ' + res.data.uptime + ' )');
+		} else {
+			server_status = false;
+			$('#server_status').html('Offline');
+		}
+	});
 }
 
 var init_pole = function(min, max) {
@@ -68,7 +82,14 @@ var show_actor = function(actor_pos) {
 	console.log("show_actor: ", actor_pos);
 	let cord = actor_pos.x + 'x' + actor_pos.y;
 	let id = '#' + cord;
-	$(id).html('X');
+	let actor_img = "X";
+	switch(actor_direction) {
+		case 'N': actor_img = '^'; break;
+		case 'S': actor_img = 'v'; break;
+		case 'W': actor_img = '<'; break;
+		case 'E': actor_img = '>'; break;
+	}
+	$(id).html(actor_img);
 	$(id).addClass('actor_ground');
 
 	get_details(actor_pos, pole);
@@ -82,8 +103,18 @@ var clear_actor = function(pos, dataset) {
 	$(id).removeClass('actor_ground');
 }
 
-var move_actor = function(direction) {
-	log("Moving actor (" + direction.axis + ": " + direction.value + ")");
+var move_actor = function() {
+
+	let direction = {};
+	if(actor_direction == 'N')
+		direction = {axis: 'y', value: -1}
+	if(actor_direction == 'S')
+		direction = {axis: 'y', value: 1}
+	if(actor_direction == 'W')
+		direction = {axis: 'x', value: -1}
+	if(actor_direction == 'E')
+		direction = {axis: 'x', value: 1}
+
 	let axis = direction.axis || 'x';
 	let value = direction.value || 0;
 
@@ -106,12 +137,46 @@ var move_actor = function(direction) {
 	show_actor(new_pos);
 }
 
+var turn_actor = function(direction) {
+	let direct = "";
+	switch(direction) {
+		case 'left': direct = 'left'; break;
+		case 'right': direct = 'right'; break;
+		default: direct = '';
+	}
+
+	if(direct == '') 
+		return false;
+
+	if(direct == 'left')
+		switch(actor_direction) {
+			case 'N': actor_direction = 'W'; break;
+			case 'S': actor_direction = 'E'; break;
+			case 'W': actor_direction = 'S'; break;
+			case 'E': actor_direction = 'N'; break;
+		}
+	else if (direct == 'right')
+		switch(actor_direction) {
+			case 'N': actor_direction = 'E'; break;
+			case 'S': actor_direction = 'W'; break;
+			case 'W': actor_direction = 'N'; break;
+			case 'E': actor_direction = 'S'; break;
+		}
+
+	show_actor(actor_pos);
+}
+
 var deleyed_loop_move_actor = function(i, action_list) {
 	if(i == action_list.length) {
 		actor_in_move = false;
 		return false;
 	} else {
-		move_actor(action_list[i]);
+		console.log(action_list[i]);
+		switch(action_list[i].action) {
+			case 'move': move_actor(); break;
+			case 'turn_left': turn_actor('left'); break;
+			case 'turn_right': turn_actor('right'); break;
+		};
 		setTimeout(function(){ deleyed_loop_move_actor(++i, action_list); }, 1000);
 	}
 }
@@ -125,12 +190,16 @@ var move_actor_to = function(target_pos, dataset) {
 
 	actor_in_move = true;
 
+	console.log(" ");
+	console.log("------------- Starting Move -------------");
+
 	calcMove({
 		target: target,
 		current: current,
-		dataset: data
+		dataset: data,
+		direction: actor_direction
 	}, (response) => {
-
+		//console.log(response);
 		if(response.status == 'ok') {
 			deleyed_loop_move_actor(0, response.data.actionList);
 		} else {
@@ -149,12 +218,14 @@ var get_details = function(pos, dataset) {
 	cost = dataset[pos.x][pos.y].cost;
 	actions = Array();
 
+	$('#details_actor_direction').html('');
 	$('#details_ground_type').html('');
 	$('#details_cords').html('');
 	$('#details_image_id').html('');
 	$('#details_cost').html('');
 	$('#action_list').html('');
 
+	$('#details_actor_direction').html(actor_direction);
 	$('#details_ground_type').html(ground_type);
 	$('#details_cords').html(cords);
 	$('#details_image_id').html(image_id);
@@ -186,51 +257,31 @@ $('.pole').on('click', function(){
 		move_actor_to(pos, pole);
 });
 
-$('#button_move_left').on('click', function(){
+$('#button_turn_left').on('click', function(){
 	if(!actor_in_move)
-		move_actor({
-			axis: 'x',
-			value: -1
-		});
+		turn_actor('left');
 });
 
-$('#button_move_right').on('click', function(){
+$('#button_turn_right').on('click', function(){
 	if(!actor_in_move)
-		move_actor({
-			axis: 'x',
-			value: 1
-		});
+		turn_actor('right');
 });
 
-$('#button_move_up').on('click', function(){
+$('#button_move').on('click', function(){
 	if(!actor_in_move)
-		move_actor({
-			axis: 'y',
-			value: -1
-		});
-});
-
-$('#button_move_down').on('click', function(){
-	if(!actor_in_move)
-		move_actor({
-			axis: 'y',
-			value: 1
-		});
+		move_actor();
 });
 
 $(document).keydown(function(e) {
     switch(e.which){
         case 37: 
-        	$("#button_move_left").click();
+        	$("#button_turn_left").click();
         	break;
         case 38: 
-        	$("#button_move_up").click();
+        	$("#button_move").click();
         	break;
         case 39: 
-        	$("#button_move_right").click();
-        	break;
-        case 40: 
-        	$("#button_move_down").click();
+        	$("#button_turn_right").click();
         	break;
     }
 });
@@ -241,9 +292,11 @@ $(document).keydown(function(e) {
 
 var main_init = function() {
 	log('Init start...');
+	check_server_status();
 	init_pole(1,5);
 	show_pole(pole);
 	show_actor(actor_pos);
+	setInterval(check_server_status, 1000);
 	log('Init complete.');
 }
 

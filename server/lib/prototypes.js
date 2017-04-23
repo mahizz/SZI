@@ -1,4 +1,4 @@
-String.prototype.toHHMMSS = function () {
+String.prototype.toHHMMSS = function() {
 	var sec_num = parseInt(this, 10);
 	var hours   = Math.floor(sec_num / 3600);
 	var minutes = Math.floor((sec_num - (hours * 3600)) / 60);

@@ -1,6 +1,26 @@
 server_adr = 'localhost';
 server_port = 3088;
 
+var checkStatus = function(next) {
+	let response = { status: 'fail' };
+	let serv_url = 'http://' + server_adr + ':' + server_port;
+
+	$.ajax({
+	    url: serv_url + '/status',
+	    type: 'GET',
+	    timeout: 3000,
+	    crossDomain: true,
+	    success: (res) => { 
+	    	response.status = 'ok';
+	    	response.data = res;
+	    	next(response);
+	    },
+		error: (jqXHR, textStatus, err) => {
+			next(response);
+		}
+	});
+}
+
 var calcMove = function(req, next) {
 
 	let response = { status: 'fail' };
@@ -14,11 +34,11 @@ var calcMove = function(req, next) {
 	    success: (res) => { 
 	    	response.status = 'ok';
 	    	response.data = res;
-
 	    	next(response);
 	    },
 		error: (jqXHR, textStatus, err) => {
 			console.log('text status ' + textStatus + ', err ' + err);
+			next(response);
 		}
 	});
 }

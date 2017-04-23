@@ -140,13 +140,14 @@
 					</tbody>
 				</table>
 				<div class="controls">
-					<button type="button" id="button_move_up" class="btn btn-default button_control"> /\ </button>
-					</br>
-					<button type="button" id="button_move_left" class="btn btn-default button_control"> <-- </button>
-					<button type="button" id="button_move_down" class="btn btn-default button_control"> \/ </button>
-					<button type="button" id="button_move_right" class="btn btn-default button_control"> --> </button>
+					<button type="button" id="button_turn_left" class="btn btn-default button_control"> <-- </button>
+					<button type="button" id="button_move" class="btn btn-default button_control"> /\ </button>
+					<button type="button" id="button_turn_right" class="btn btn-default button_control"> --> </button>
 				</div>
 				<div class="ground_details">
+					<span class="name">Kierunek aktora: </span>
+					<span class="value" id="details_actor_direction">%actor_direction%</span></br>
+
 					<span class="name">Typ pola: </span>
 					<span class="value" id="details_ground_type">%ground_type%</span></br>
 
@@ -175,7 +176,8 @@
 				</div>
 			</div>
 
-
+			<span style="clear: both; width: 100vw; font-weight: bold;">Server status:</span>
+			<span id="server_status"></span>
 		</div>
 
 		<script src="assets/dependency/jquery-3.2.1.js"></script>

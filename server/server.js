@@ -1,10 +1,13 @@
 var express 	= require('express')
 var app 		= express()
 var bodyParser  = require('body-parser')
+var movment 	= require('./controllers/movment').Movment
+var conventers 	= require('./lib/conventers')
 
 //Libs
 require('./lib/prototypes')
-var movment = require('./controllers/movment').Movment
+
+
 //Variales
 var _port = 3088
 
@@ -57,9 +60,9 @@ app.post('/api/calcMove', (req, res) => {
 		direction: direction
 	}
 
-	//Sending test data
+	//Sending data
 	res.json({
-		actionList: movment(dataset,start,target)		
+		actionList: conventers.convertToMovementList(movment(dataset,start,target))	
 	})
 })
 

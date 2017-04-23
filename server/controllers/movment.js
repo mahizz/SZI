@@ -3,7 +3,7 @@ var q = require('.././models/priorityq')
 
 var _ = require('lodash')
 
-var Movment = function Movment(dataset,start,goal){
+var Movment = function Movment(dataset,start,goal) {
 	console.log("start -----------------------------------------")
 	var open = new q()
 	var close = []
@@ -19,7 +19,7 @@ var Movment = function Movment(dataset,start,goal){
 			break
 		}
 		current = open.pop()
-		console.log("current: ",current)
+		//console.log("current: ",current)
 
 		if( goalTest(current.state,goal) ){
 			return current
@@ -36,7 +36,6 @@ var Movment = function Movment(dataset,start,goal){
    					cost(dataset[entry.x][entry.y].cost, entry, goal)
 				)
 
-
    			//(_.find(close, function(item) { return item.state == temp.state }) ){
    			let test = open.search(temp.state)	
 
@@ -46,17 +45,11 @@ var Movment = function Movment(dataset,start,goal){
    			}else if(test != null){
    				console.log("To DO ")
    			}
-
-   			
-
    			
 		});
 
 		if(i==20)console.log("placek")
 	}
-
-	
-
 
 	return open
 }
@@ -109,13 +102,13 @@ function actions(dataset,state){
 		x:curr_x,
 		y:curr_y,
 		direction:dirrR,
-		action:"trun right"
+		action:"turn_right"
 	}
 	let turnL = {
 		x:curr_x,
 		y:curr_y,
 		direction:dirrL,
-		action:"trun left"
+		action:"turn_left"
 	}
 	actions.push(turnR)
 	actions.push(turnL)
@@ -140,7 +133,5 @@ function cost(cost,state,goal){
 function goalTest(state,goal){
 	return  (( state.x == goal.x ) && ( state.y == goal.y ))
 }
-
-
 
 module.exports.Movment = Movment;
