@@ -6,6 +6,8 @@ max_x = 9;
 max_y = 9;
 pole_min_cost = 1;
 pole_max_cost = 10;
+img_min_id = 1;
+img_max_id = 5;
 pole = Array();
 actor_in_move = false;
 server_status = false;
@@ -14,12 +16,6 @@ actor_pos = {
 	x: 0,
 	y: 0
 }
-
-/*
-	ruch = 4 + koszt miejsca nasteonego
-	obrot = 5 + koszt miejsca w ktorym stoisz
-*/
-
 
 /*=================================
 =            Requaries            =
@@ -39,9 +35,11 @@ $.getScript('assets/js/rest.js', function() {
 var setDebuggerGround = function() {
 	for (let i = 0; i <= 9; i++) {
 		pole[5][i].cost = 100;
+		pole[5][i].image = 100;
 	}
 	for (let i = 0; i <= 9; i++) {
 		pole[i][4].cost = 100;
+		pole[i][4].image = 100;
 	}
 	pole[5][7].cost = 1;
 	pole[1][4].cost = 1;
@@ -55,17 +53,6 @@ var setDebuggerGround = function() {
 =            Functions for website            =
 =============================================*/
 
-var debug = function(msg) {
-	let time = new Date();
-	let element = '<li> [' + time.getTime() + ']: ' + msg + '</li>';
-	$('#debug-list').prepend(element);
-}
-
-var log = function() {
-	var args = Array.prototype.slice.call(arguments);
-	args.forEach((msg) => { debug(msg); });
-	console.log.apply(console, arguments);
-}
 
 var check_server_status = function() {
 	checkStatus((res) => {
@@ -85,7 +72,7 @@ var init_pole = function(min, max) {
 		for(let y = 0; y <= max_y; y++) {
 			pole[x][y] = {
 				cost: (Math.floor(Math.random() * (max - min + 1)) + min),
-				image: (Math.floor(Math.random() * 100))
+				image: (Math.floor(Math.random() * (img_max_id - img_min_id + 1)) + img_min_id)
 			};
 		}
 	}
@@ -121,6 +108,14 @@ var show_actor = function(actor_pos) {
 	$(id).addClass('actor_ground');
 
 	get_details(actor_pos, pole);
+
+	let img_id = pole[actor_pos.x][actor_pos.y].image;
+	show_image(img_id)
+}
+
+var show_image = function(img_id) {
+	let imageUrl = "assets/images/grounds/" + img_id + ".jpg";
+	$('#image_view').css('background-image', 'url(' + imageUrl + ')');
 }
 
 var clear_actor = function(pos, dataset) {
@@ -319,13 +314,13 @@ $(document).keydown(function(e) {
 ==================================*/
 
 var main_init = function() {
-	log('Init start...');
+	console.log('Init start...');
 	check_server_status();
 	init_pole(pole_min_cost,pole_max_cost);
 	show_pole(pole);
 	show_actor(actor_pos);
 	setInterval(check_server_status, 1000);
-	log('Init complete.');
+	console.log('Init complete.');
 }
 
 $(document).ready(main_init);

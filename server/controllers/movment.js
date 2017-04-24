@@ -130,7 +130,7 @@ function cost(cost, state, goal, action) {
 	if(action == 'move')
 		heuristic = Math.abs(goal.x - state.x) + Math.abs(goal.y - state.y) + parseInt(cost)
 	else
-		heuristic = parseInt(cost)
+		heuristic = Math.abs(goal.x - state.x) + Math.abs(goal.y - state.y) + Math.floor(parseInt(cost) / 3)
 
 	return heuristic
 }

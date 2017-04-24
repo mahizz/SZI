@@ -38,6 +38,7 @@
 	padding: 10px;
 	width: 100%;
 	height: 130px;
+	text-align: center;
 }
 
 .controls > .button_control {
@@ -69,6 +70,21 @@
 	margin-left: 20px;
 }
 
+/* --Image-- */
+.div_image {
+	padding-top: 20px;
+	min-width: 410px;
+	width: 45%;
+	height: 95%;
+	float: left;
+	background-color: rgb(190,190,250);
+}
 
+#image_view {
+	margin: auto;
+	width: 400px;
+	height: 400px;
+	border-radius: 25px;
+}
 
 

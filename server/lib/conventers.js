@@ -1,7 +1,7 @@
 var convertToMovementList = function(queue) {
 	let movement = [];
 	let current = queue;
-
+	console.log(queue);
 	while(typeof(current.parent) != 'undefined') {
 
 		let step = {

@@ -9,7 +9,6 @@
 		<link rel="stylesheet" type="text/css" href="assets/dependency/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="assets/dependency/bootstrap-theme.min.css">
 		<link rel="stylesheet" type="text/css" href="assets/style/reset.css">
-		<link rel="stylesheet" type="text/css" href="assets/style/debugger.css">
 		<link rel="stylesheet" type="text/css" href="assets/style/apk.css">
 	</head>
 	<body>
@@ -144,6 +143,9 @@
 					<button type="button" id="button_move" class="btn btn-default button_control"> /\ </button>
 					<button type="button" id="button_turn_right" class="btn btn-default button_control"> --> </button>
 				</div>
+			</div>
+			<div class="div_image">
+				<div id="image_view"></div>
 				<div class="ground_details">
 					<span class="name">Kierunek aktora: </span>
 					<span class="value" id="details_actor_direction">%actor_direction%</span></br>
@@ -164,14 +166,6 @@
 					<ul class="value" id="action_list">
 						<li> Brak </li>
 						<!-- action_list here -->
-					</ul>
-				</div>
-			</div>
-			<div class="div_debug">
-				<h2>Debugger:</h2>
-				<div id="debug-wrapper">
-					<ul id="debug-list">
-						<!-- debug here -->
 					</ul>
 				</div>
 			</div>
