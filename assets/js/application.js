@@ -4,6 +4,8 @@
 
 max_x = 9;
 max_y = 9;
+pole_min_cost = 1;
+pole_max_cost = 10;
 pole = Array();
 actor_in_move = false;
 server_status = false;
@@ -13,15 +15,41 @@ actor_pos = {
 	y: 0
 }
 
+/*
+	ruch = 4 + koszt miejsca nasteonego
+	obrot = 5 + koszt miejsca w ktorym stoisz
+*/
+
 
 /*=================================
 =            Requaries            =
 =================================*/
 
-$.getScript('assets/js/rest.js', function(){
+$.getScript('assets/js/rest.js', function() {
     // script is now loaded and executed.
     // put your dependent JS here.
 });
+
+
+
+/*=======================================
+=            Debug functions            =
+=======================================*/
+
+var setDebuggerGround = function() {
+	for (let i = 0; i <= 9; i++) {
+		pole[5][i].cost = 100;
+	}
+	for (let i = 0; i <= 9; i++) {
+		pole[i][4].cost = 100;
+	}
+	pole[5][7].cost = 1;
+	pole[1][4].cost = 1;
+	pole[8][4].cost = 1;
+	show_pole(pole);
+	show_actor(actor_pos);
+}
+
 
 /*=============================================
 =            Functions for website            =
@@ -293,7 +321,7 @@ $(document).keydown(function(e) {
 var main_init = function() {
 	log('Init start...');
 	check_server_status();
-	init_pole(1,5);
+	init_pole(pole_min_cost,pole_max_cost);
 	show_pole(pole);
 	show_actor(actor_pos);
 	setInterval(check_server_status, 1000);

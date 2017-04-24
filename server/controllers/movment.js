@@ -7,7 +7,7 @@ var Movment = function Movment(dataset,start,goal) {
 	console.log("start -----------------------------------------")
 	var open = new q()
 	var close = []
-	open.push(new node('start','none',start,cost(dataset,start,goal)))
+	open.push(new node('start','none',start,cost(dataset,start,goal, 'none')))
 
 	let path = false
 	let current
@@ -31,7 +31,7 @@ var Movment = function Movment(dataset,start,goal) {
    					current,
    					entry.action,
    					{x: entry.x ,y: entry.y , direction: entry.direction},
-   					cost(dataset[entry.x][entry.y].cost, entry, goal)
+   					cost(dataset[entry.x][entry.y].cost, entry, goal, entry.action)
 				)
 
    			//(_.find(close, function(item) { return item.state == temp.state }) ){
@@ -123,12 +123,19 @@ function actions(dataset,state){
 	return actions
 }
 
-function cost(cost,state,goal){
-	let heuristic = Math.abs(goal.x - state.x) + Math.abs(goal.y - state.y)
-	return heuristic + parseInt(cost)
+function cost(cost, state, goal, action) {
+	
+	let heuristic = 0
+
+	if(action == 'move')
+		heuristic = Math.abs(goal.x - state.x) + Math.abs(goal.y - state.y) + parseInt(cost)
+	else
+		heuristic = parseInt(cost)
+
+	return heuristic
 }
 
-function goalTest(state,goal){
+function goalTest(state, goal) {
 	return  (( state.x == goal.x ) && ( state.y == goal.y ))
 }
 
