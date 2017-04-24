@@ -10,10 +10,8 @@ var Movment = function Movment(dataset,start,goal) {
 	open.push(new node('start','none',start,cost(dataset,start,goal)))
 
 	let path = false
-	let i =0
 	let current
 	while(!path){
-		i=i+1
 
 		if(open.length < 1){
 			break
@@ -42,13 +40,13 @@ var Movment = function Movment(dataset,start,goal) {
    			let some = find(close,temp.state)
    			if(test == null &&  !find(close,temp.state)){
    				open.push(temp)
-   			}else if(test != null){
-   				console.log("To DO ")
+   			}else if(test != null) {
+   				open.remove(test.i)
+   				open.push(temp)
    			}
    			
 		});
 
-		if(i==20)console.log("placek")
 	}
 
 	return open

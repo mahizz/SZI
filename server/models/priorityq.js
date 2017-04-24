@@ -22,11 +22,18 @@ PriorityQueue.prototype.get = function(i) {
 
 PriorityQueue.prototype.search = function(k) {
     for (var i=0; i < this.data.length; i++) {
-
         if (this.data[i].state == k) {
-            return this.data[i]
+            return {
+                    data: this.data[i],
+                    i: i
+                  }
         }
     }
+    return null
+}
+
+PriorityQueue.prototype.remove = function(i) {
+    this.data.splice(i, 1);
 }
 
 module.exports = PriorityQueue;
