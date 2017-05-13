@@ -29,24 +29,6 @@ app.use((req, res, next) => {
 
 app.get('/', (req, res) => {
 
-	let time = process.uptime()
-    let uptime = (time + "").toHHMMSS()
-
-    let text
-
-	PythonShell.run('d_label_image.py',options, function (err, results) {
-	  if (err) throw err;
-	  // results is an array consisting of messages collected during execution
-
-  	res.json({
-		server: 'ok',
-		results: results
-	})
-	  console.log('results: %j', results);
-	});
-
-	// python d_label_image.py flower_photos/roses/2414954629_3708a1a04d.jpg
-
 	res.json({
 		server: 'ok'
 	})
