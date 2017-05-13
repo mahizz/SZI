@@ -17,15 +17,6 @@ actor_pos = {
 	y: 0
 }
 
-/*=================================
-=            Requaries            =
-=================================*/
-
-$.getScript('assets/js/rest.js', function() {
-    // script is now loaded and executed.
-    // put your dependent JS here.
-});
-
 
 
 /*=======================================
@@ -314,12 +305,18 @@ $(document).keydown(function(e) {
 ==================================*/
 
 var main_init = function() {
+
 	console.log('Init start...');
-	check_server_status();
-	init_pole(pole_min_cost,pole_max_cost);
-	show_pole(pole);
-	show_actor(actor_pos);
-	setInterval(check_server_status, 1000);
+	
+	$.getScript('assets/js/rest.js', function() {
+	    check_server_status();
+		init_pole(pole_min_cost,pole_max_cost);
+		show_pole(pole);
+		show_actor(actor_pos);
+		setInterval(check_server_status, 1000);
+	});
+	
+	
 	console.log('Init complete.');
 }
 

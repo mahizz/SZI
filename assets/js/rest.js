@@ -1,4 +1,4 @@
-server_adr = 'localhost';
+server_adr = window.location.host || 'localhost';
 server_port = 3088;
 
 var checkStatus = function(next) {
