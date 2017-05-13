@@ -3,6 +3,7 @@ var app 		= express()
 var bodyParser  = require('body-parser')
 var movment 	= require('./controllers/movment').Movment
 var conventers 	= require('./lib/conventers')
+var PythonShell = require('python-shell')
 
 //Libs
 require('./lib/prototypes')
@@ -22,14 +23,34 @@ app.use((req, res, next) => {
 	next()
 })
 
+
+//    network/flower_photos/final/daisy_test.jpg
+
+
 app.get('/', (req, res) => {
 
 	let time = process.uptime()
     let uptime = (time + "").toHHMMSS()
 
+    let text
+
+	PythonShell.run('d_label_image.py',options, function (err, results) {
+	  if (err) throw err;
+	  // results is an array consisting of messages collected during execution
+
+  	res.json({
+		server: 'ok',
+		results: results
+	})
+	  console.log('results: %j', results);
+	});
+
+	// python d_label_image.py flower_photos/roses/2414954629_3708a1a04d.jpg
+
 	res.json({
 		server: 'ok'
 	})
+
 })
 
 app.get('/status', (req, res) => {
@@ -65,6 +86,30 @@ app.post('/api/calcMove', (req, res) => {
 		actionList: conventers.convertToMovementList(movment(dataset,start,target))	
 	})
 })
+
+app.get('/api/plants/:uid', (req, res) => {
+
+	let name = req.params.uid
+
+	let options = {
+	  scriptPath: 'network/',
+	  args: ["../assets/images/"+name+".jpg"]
+	};
+
+
+	PythonShell.run('d_label_image.py',options, function (err, results) {
+	  if (err) throw err;
+	  // results is an array consisting of messages collected during execution
+
+  	res.json({
+		server: 'ok',
+		results: results
+	})
+	});
+
+
+})
+
 
 app.listen(_port, function () {
 	console.log('Server running at', _port)
