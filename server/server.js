@@ -29,6 +29,9 @@ app.use((req, res, next) => {
 
 app.get('/', (req, res) => {
 
+	let time = process.uptime()
+    let uptime = (time + "").toHHMMSS()
+
 	res.json({
 		server: 'ok'
 	})
@@ -87,6 +90,29 @@ app.get('/api/plants/:uid', (req, res) => {
 			server: 'ok',
 			results: results
 		})
+	});
+
+
+})
+
+app.get('/api/ground/:uid', (req, res) => {
+
+	let name = req.params.uid
+
+	let options = {
+	  scriptPath: 'network_ground/',
+	  args: ["../assets/images/grounds/"+name+".jpg"]
+	};
+
+
+	PythonShell.run('label_image.py',options, function (err, results) {
+	  if (err) throw err;
+	  // results is an array consisting of messages collected during execution
+
+  	res.json({
+		server: 'ok',
+		results: results
+	})
 	});
 
 
