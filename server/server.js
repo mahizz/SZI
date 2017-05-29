@@ -4,13 +4,14 @@ var bodyParser  = require('body-parser')
 var movment 	= require('./controllers/movment').Movment
 var conventers 	= require('./lib/conventers')
 var PythonShell = require('python-shell')
+var DTree 		= require('./lib/id3')
 
 //Libs
 require('./lib/prototypes')
-//sd
 
 //Variales
 var _port = 3088
+var dtreeWatering
 
 //BodyParser
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -28,11 +29,9 @@ app.use((req, res, next) => {
 
 
 app.get('/', (req, res) => {
-
 	res.json({
 		server: 'ok'
 	})
-
 })
 
 app.get('/status', (req, res) => {
@@ -70,29 +69,70 @@ app.post('/api/calcMove', (req, res) => {
 })
 
 app.get('/api/plants/:uid', (req, res) => {
-
+	
 	let name = req.params.uid
-
 	let options = {
-	  scriptPath: 'network/',
-	  args: ["../assets/images/"+name+".jpg"]
+		scriptPath: 'network/',
+		args: ["../assets/images/"+name+".jpg"]
 	};
 
-
 	PythonShell.run('d_label_image.py',options, function (err, results) {
-	  if (err) throw err;
-	  // results is an array consisting of messages collected during execution
+		if (err) throw err
 
-  	res.json({
-		server: 'ok',
-		results: results
+	  	res.json({
+			server: 'ok',
+			results: results
+		})
 	})
-	});
+})
 
+app.get('/api/ID3/:plant/:weather/:forecast', (req, res) => {
 
+	let predicted_class = dtreeWatering.predict({
+		plant: req.params.plant,
+		weather: req.params.weather,
+		forecast: req.params.forecast
+	})
+
+	res.json(predicted_class)
+})
+
+app.get('/api/getTree', (req, res) => {
+	res.json(dtreeWatering.toJSON())
 })
 
 
 app.listen(_port, function () {
 	console.log('Server running at', _port)
+
+	let training_data = [
+		{"plant":"ground", "weather":"dry", "forecast":"0", "watering":true},
+		{"plant":"ground", "weather":"dry", "forecast":"50", "watering":false},
+		{"plant":"rock", "weather":"dry", "forecast":"0", "watering":false},
+		{"plant":"rock", "weather":"dry", "forecast":"50", "watering":false},
+
+		{"plant":"potato", "weather":"dry", "forecast":"0", "watering":true},
+		{"plant":"potato", "weather":"dry", "forecast":"50", "watering":false},
+		{"plant":"rose", "weather":"dry", "forecast":"0", "watering":true},
+		{"plant":"rose", "weather":"dry", "forecast":"50", "watering":false},
+		{"plant":"daisy", "weather":"dry", "forecast":"0", "watering":true},
+		{"plant":"daisy", "weather":"dry", "forecast":"50", "watering":false},
+
+		{"plant":"ground", "weather":"wet", "forecast":"0", "watering":false},
+		{"plant":"ground", "weather":"wet", "forecast":"50", "watering":false},
+		{"plant":"rock", "weather":"wet", "forecast":"0", "watering":false},
+		{"plant":"rock", "weather":"wet", "forecast":"50", "watering":false},
+
+		{"plant":"potato", "weather":"wet", "forecast":"0", "watering":false},
+		{"plant":"potato", "weather":"wet", "forecast":"50", "watering":false},
+		{"plant":"rose", "weather":"wet", "forecast":"0", "watering":false},
+		{"plant":"rose", "weather":"wet", "forecast":"50", "watering":false},
+		{"plant":"daisy", "weather":"wet", "forecast":"0", "watering":false},
+		{"plant":"daisy", "weather":"wet", "forecast":"50", "watering":false}
+	]
+
+	let class_name = "watering"
+	let features = ["plant", "weather", "forecast"]
+
+	dtreeWatering = new DTree(training_data, class_name, features)
 })
