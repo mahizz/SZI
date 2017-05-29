@@ -75,7 +75,7 @@ app.get('/api/plants/:uid', (req, res) => {
 
 	let options = {
 	  scriptPath: 'network/',
-	  args: ["../assets/images/"+name+".jpg"]
+	  args: ["../assets/images/flowers/"+name+".jpg"]
 	};
 
 
@@ -83,10 +83,10 @@ app.get('/api/plants/:uid', (req, res) => {
 	  if (err) throw err;
 	  // results is an array consisting of messages collected during execution
 
-  	res.json({
-		server: 'ok',
-		results: results
-	})
+	  	res.json({
+			server: 'ok',
+			results: results
+		})
 	});
 
 
