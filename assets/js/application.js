@@ -7,7 +7,7 @@ max_y = 9;
 pole_min_cost = 1;
 pole_max_cost = 10;
 img_min_id = 1;
-img_max_id = 5;
+img_max_id = 6;
 pole = Array();
 actor_in_move = false;
 server_status = false;
@@ -105,7 +105,7 @@ var show_actor = function(actor_pos) {
 }
 
 var show_image = function(img_id) {
-	let imageUrl = "assets/images/grounds/" + img_id + ".jpg";
+	let imageUrl = "assets/images/flowers/" + img_id + ".jpg";
 	$('#image_view').css('background-image', 'url(' + imageUrl + ')');
 }
 
@@ -198,9 +198,24 @@ var deleyed_loop_move_actor = function(i, action_list) {
 var move_actor_to = function(target_pos, dataset) {
 	console.log('Moving to', target_pos);
 
+	$('#details_ground_type').html("Loading...");
+
 	let target = target_pos;
 	let current = actor_pos;
 	let data = dataset;
+
+	let image_id = dataset[target_pos.x][target_pos.y].image;
+	aiGroundType({imgId: image_id}, (res) => {
+		if(res.status == 'ok') {
+			let aiResponse = res.data.results;
+			let tmp = aiResponse[0].split(" ");
+			ground_type = tmp[0];
+			$('#details_ground_type').html(ground_type);
+		} else {
+			$('#details_ground_type').html("???");
+		}
+		
+	});
 
 	actor_in_move = true;
 
@@ -227,20 +242,17 @@ var get_details = function(pos, dataset) {
 	let ground_type, cords, image_id, cost, actions;
 
 	cords = pos.x + 'x' + pos.y;
-	ground_type = "???";
 	image_id = dataset[pos.x][pos.y].image;
 	cost = dataset[pos.x][pos.y].cost;
 	actions = Array();
 
 	$('#details_actor_direction').html('');
-	$('#details_ground_type').html('');
 	$('#details_cords').html('');
 	$('#details_image_id').html('');
 	$('#details_cost').html('');
 	$('#action_list').html('');
 
 	$('#details_actor_direction').html(actor_direction);
-	$('#details_ground_type').html(ground_type);
 	$('#details_cords').html(cords);
 	$('#details_image_id').html(image_id);
 	$('#details_cost').html(cost);
