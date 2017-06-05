@@ -42,3 +42,25 @@ var calcMove = function(req, next) {
 		}
 	});
 }
+
+var aiGroundType = function(req, next) {
+
+	let response = { status: 'fail' };
+	let serv_url = 'http://' + server_adr + ':' + server_port;
+	let img_uid = 1 * req.imgId;
+
+	$.ajax({
+	    url: serv_url + '/api/plants/' + img_uid,
+	    type: 'GET',
+	    crossDomain: true,
+	    success: (res) => { 
+	    	response.status = 'ok';
+	    	response.data = res;
+	    	next(response);
+	    },
+		error: (jqXHR, textStatus, err) => {
+			console.log('text status ' + textStatus + ', err ' + err);
+			next(response);
+		}
+	});
+}

@@ -1,0 +1,62 @@
+
+On branch test
+Your branch is behind 'origin/test' by 1 commit, and can be fast-forwarded.
+  (use "git pull" to update your local branch)
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+	modified:   .gitignore
+	modified:   README.md
+	modified:   assets/dependency/bootstrap-theme.min.css
+	modified:   assets/dependency/bootstrap-theme.min.css.map
+	modified:   assets/dependency/bootstrap.min.css
+	modified:   assets/dependency/bootstrap.min.css.map
+	modified:   assets/dependency/bootstrap.min.js
+	modified:   assets/dependency/jquery-3.2.1.js
+	modified:   assets/dependency/jquery.js
+	modified:   assets/dependency/npm.js
+	modified:   assets/fonts/glyphicons-halflings-regular.eot
+	modified:   assets/fonts/glyphicons-halflings-regular.svg
+	modified:   assets/fonts/glyphicons-halflings-regular.ttf
+	modified:   assets/fonts/glyphicons-halflings-regular.woff
+	modified:   assets/fonts/glyphicons-halflings-regular.woff2
+	modified:   assets/images/.gitignore
+	deleted:    assets/images/1.jpg
+	deleted:    assets/images/2.jpg
+	deleted:    assets/images/3.jpg
+	deleted:    assets/images/4.jpg
+	deleted:    assets/images/5.jpg
+	deleted:    assets/images/6.jpg
+	modified:   assets/images/grounds/1.jpg
+	modified:   assets/images/grounds/100.jpg
+	modified:   assets/images/grounds/2.jpg
+	modified:   assets/images/grounds/3.jpg
+	modified:   assets/images/grounds/4.jpg
+	modified:   assets/images/grounds/5.jpg
+	modified:   assets/js/application.js
+	modified:   assets/js/rest.js
+	modified:   assets/style/apk.css
+	modified:   assets/style/reset.css
+	modified:   index.html
+	modified:   server/.gitignore
+	modified:   server/controllers/movment.js
+	modified:   server/lib/conventers.js
+	modified:   server/lib/prototypes.js
+	modified:   server/models/node.js
+	modified:   server/models/priorityq.js
+	modified:   server/network/d_label_image.py
+	modified:   server/network/label_image.py
+	modified:   server/network/retrained_graph.pb
+	modified:   server/network/retrained_labels.txt
+	modified:   server/package.json
+	modified:   server/server.js
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+	assets/images/flowers/
+	assets/style/fa.css
+	test.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
