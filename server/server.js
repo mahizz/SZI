@@ -112,19 +112,23 @@ app.get('/api/ground/:uid', (req, res) => {
 	})
 })
 
-app.get('/api/ID3/:plant/:weather/:forecast', (req, res) => {
+app.get('/api/ID3/:plant/:weather/:forecast/:temp/:stage', (req, res) => {
 
 	let predicted_class = dtreeWatering.predict({
 		plant: req.params.plant,
 		weather: req.params.weather,
-		forecast: req.params.forecast
+		forecast: req.params.forecast,
+		temp: req.params.temp,
+		stage: req.params.stage
 	})
 
 	res.json(predicted_class)
 })
 
 app.get('/api/getTree', (req, res) => {
-	res.json(dtreeWatering.toJSON())
+    let obj = dtreeWatering.toJSON()
+	res.header("Content-Type",'application/json')
+	res.send(JSON.stringify(obj, null, 4))
 })
 
 
@@ -132,33 +136,162 @@ app.listen(_port, function () {
 	console.log('Server running at', _port)
 
 	let training_data = [
-		{"plant":"ground", "weather":"dry", "forecast":"0", "watering":true},
-		{"plant":"ground", "weather":"dry", "forecast":"50", "watering":false},
-		{"plant":"rock", "weather":"dry", "forecast":"0", "watering":false},
-		{"plant":"rock", "weather":"dry", "forecast":"50", "watering":false},
+		{"stage":"new", "temp":"high", "plant":"ground", "weather":"dry", "forecast":"0", "watering":true},
+		{"stage":"new", "temp":"high", "plant":"ground", "weather":"dry", "forecast":"50", "watering":false},
+		{"stage":"new", "temp":"high", "plant":"rock", "weather":"dry", "forecast":"0", "watering":false},
+		{"stage":"new", "temp":"high", "plant":"rock", "weather":"dry", "forecast":"50", "watering":false},
 
-		{"plant":"potato", "weather":"dry", "forecast":"0", "watering":true},
-		{"plant":"potato", "weather":"dry", "forecast":"50", "watering":false},
-		{"plant":"rose", "weather":"dry", "forecast":"0", "watering":true},
-		{"plant":"rose", "weather":"dry", "forecast":"50", "watering":false},
-		{"plant":"daisy", "weather":"dry", "forecast":"0", "watering":true},
-		{"plant":"daisy", "weather":"dry", "forecast":"50", "watering":false},
+		{"stage":"new", "temp":"high", "plant":"potato", "weather":"dry", "forecast":"0", "watering":true},
+		{"stage":"new", "temp":"high", "plant":"potato", "weather":"dry", "forecast":"50", "watering":true},
+		{"stage":"new", "temp":"high", "plant":"rose", "weather":"dry", "forecast":"0", "watering":true},
+		{"stage":"new", "temp":"high", "plant":"rose", "weather":"dry", "forecast":"50", "watering":true},
+		{"stage":"new", "temp":"high", "plant":"daisy", "weather":"dry", "forecast":"0", "watering":true},
+		{"stage":"new", "temp":"high", "plant":"daisy", "weather":"dry", "forecast":"50", "watering":true},
 
-		{"plant":"ground", "weather":"wet", "forecast":"0", "watering":false},
-		{"plant":"ground", "weather":"wet", "forecast":"50", "watering":false},
-		{"plant":"rock", "weather":"wet", "forecast":"0", "watering":false},
-		{"plant":"rock", "weather":"wet", "forecast":"50", "watering":false},
+		{"stage":"new", "temp":"high", "plant":"ground", "weather":"wet", "forecast":"0", "watering":false},
+		{"stage":"new", "temp":"high", "plant":"ground", "weather":"wet", "forecast":"50", "watering":false},
+		{"stage":"new", "temp":"high", "plant":"rock", "weather":"wet", "forecast":"0", "watering":false},
+		{"stage":"new", "temp":"high", "plant":"rock", "weather":"wet", "forecast":"50", "watering":false},
 
-		{"plant":"potato", "weather":"wet", "forecast":"0", "watering":false},
-		{"plant":"potato", "weather":"wet", "forecast":"50", "watering":false},
-		{"plant":"rose", "weather":"wet", "forecast":"0", "watering":false},
-		{"plant":"rose", "weather":"wet", "forecast":"50", "watering":false},
-		{"plant":"daisy", "weather":"wet", "forecast":"0", "watering":false},
-		{"plant":"daisy", "weather":"wet", "forecast":"50", "watering":false}
+		{"stage":"new", "temp":"high", "plant":"potato", "weather":"wet", "forecast":"0", "watering":true},
+		{"stage":"new", "temp":"high", "plant":"potato", "weather":"wet", "forecast":"50", "watering":true},
+		{"stage":"new", "temp":"high", "plant":"rose", "weather":"wet", "forecast":"0", "watering":true},
+		{"stage":"new", "temp":"high", "plant":"rose", "weather":"wet", "forecast":"50", "watering":false},
+		{"stage":"new", "temp":"high", "plant":"daisy", "weather":"wet", "forecast":"0", "watering":true},
+		{"stage":"new", "temp":"high", "plant":"daisy", "weather":"wet", "forecast":"50", "watering":false},
+
+
+		{"stage":"new", "temp":"low", "plant":"ground", "weather":"dry", "forecast":"0", "watering":true},
+		{"stage":"new", "temp":"low", "plant":"ground", "weather":"dry", "forecast":"50", "watering":false},
+		{"stage":"new", "temp":"low", "plant":"rock", "weather":"dry", "forecast":"0", "watering":false},
+		{"stage":"new", "temp":"low", "plant":"rock", "weather":"dry", "forecast":"50", "watering":false},
+
+		{"stage":"new", "temp":"low", "plant":"potato", "weather":"dry", "forecast":"0", "watering":true},
+		{"stage":"new", "temp":"low", "plant":"potato", "weather":"dry", "forecast":"50", "watering":false},
+		{"stage":"new", "temp":"low", "plant":"rose", "weather":"dry", "forecast":"0", "watering":true},
+		{"stage":"new", "temp":"low", "plant":"rose", "weather":"dry", "forecast":"50", "watering":false},
+		{"stage":"new", "temp":"low", "plant":"daisy", "weather":"dry", "forecast":"0", "watering":true},
+		{"stage":"new", "temp":"low", "plant":"daisy", "weather":"dry", "forecast":"50", "watering":false},
+
+		{"stage":"new", "temp":"low", "plant":"ground", "weather":"wet", "forecast":"0", "watering":false},
+		{"stage":"new", "temp":"low", "plant":"ground", "weather":"wet", "forecast":"50", "watering":false},
+		{"stage":"new", "temp":"low", "plant":"rock", "weather":"wet", "forecast":"0", "watering":false},
+		{"stage":"new", "temp":"low", "plant":"rock", "weather":"wet", "forecast":"50", "watering":false},
+
+		{"stage":"new", "temp":"low", "plant":"potato", "weather":"wet", "forecast":"0", "watering":true},
+		{"stage":"new", "temp":"low", "plant":"potato", "weather":"wet", "forecast":"50", "watering":false},
+		{"stage":"new", "temp":"low", "plant":"rose", "weather":"wet", "forecast":"0", "watering":true},
+		{"stage":"new", "temp":"low", "plant":"rose", "weather":"wet", "forecast":"50", "watering":false},
+		{"stage":"new", "temp":"low", "plant":"daisy", "weather":"wet", "forecast":"0", "watering":true},
+		{"stage":"new", "temp":"low", "plant":"daisy", "weather":"wet", "forecast":"50", "watering":false},
+
+
+
+
+
+		{"stage":"medium", "temp":"high", "plant":"ground", "weather":"dry", "forecast":"0", "watering":true},
+		{"stage":"medium", "temp":"high", "plant":"ground", "weather":"dry", "forecast":"50", "watering":false},
+		{"stage":"medium", "temp":"high", "plant":"rock", "weather":"dry", "forecast":"0", "watering":false},
+		{"stage":"medium", "temp":"high", "plant":"rock", "weather":"dry", "forecast":"50", "watering":false},
+
+		{"stage":"medium", "temp":"high", "plant":"potato", "weather":"dry", "forecast":"0", "watering":true},
+		{"stage":"medium", "temp":"high", "plant":"potato", "weather":"dry", "forecast":"50", "watering":true},
+		{"stage":"medium", "temp":"high", "plant":"rose", "weather":"dry", "forecast":"0", "watering":true},
+		{"stage":"medium", "temp":"high", "plant":"rose", "weather":"dry", "forecast":"50", "watering":false},
+		{"stage":"medium", "temp":"high", "plant":"daisy", "weather":"dry", "forecast":"0", "watering":true},
+		{"stage":"medium", "temp":"high", "plant":"daisy", "weather":"dry", "forecast":"50", "watering":false},
+
+		{"stage":"medium", "temp":"high", "plant":"ground", "weather":"wet", "forecast":"0", "watering":false},
+		{"stage":"medium", "temp":"high", "plant":"ground", "weather":"wet", "forecast":"50", "watering":false},
+		{"stage":"medium", "temp":"high", "plant":"rock", "weather":"wet", "forecast":"0", "watering":false},
+		{"stage":"medium", "temp":"high", "plant":"rock", "weather":"wet", "forecast":"50", "watering":false},
+
+		{"stage":"medium", "temp":"high", "plant":"potato", "weather":"wet", "forecast":"0", "watering":true},
+		{"stage":"medium", "temp":"high", "plant":"potato", "weather":"wet", "forecast":"50", "watering":false},
+		{"stage":"medium", "temp":"high", "plant":"rose", "weather":"wet", "forecast":"0", "watering":false},
+		{"stage":"medium", "temp":"high", "plant":"rose", "weather":"wet", "forecast":"50", "watering":false},
+		{"stage":"medium", "temp":"high", "plant":"daisy", "weather":"wet", "forecast":"0", "watering":false},
+		{"stage":"medium", "temp":"high", "plant":"daisy", "weather":"wet", "forecast":"50", "watering":false},
+
+
+		{"stage":"medium", "temp":"low", "plant":"ground", "weather":"dry", "forecast":"0", "watering":true},
+		{"stage":"medium", "temp":"low", "plant":"ground", "weather":"dry", "forecast":"50", "watering":false},
+		{"stage":"medium", "temp":"low", "plant":"rock", "weather":"dry", "forecast":"0", "watering":false},
+		{"stage":"medium", "temp":"low", "plant":"rock", "weather":"dry", "forecast":"50", "watering":false},
+
+		{"stage":"medium", "temp":"low", "plant":"potato", "weather":"dry", "forecast":"0", "watering":true},
+		{"stage":"medium", "temp":"low", "plant":"potato", "weather":"dry", "forecast":"50", "watering":false},
+		{"stage":"medium", "temp":"low", "plant":"rose", "weather":"dry", "forecast":"0", "watering":true},
+		{"stage":"medium", "temp":"low", "plant":"rose", "weather":"dry", "forecast":"50", "watering":false},
+		{"stage":"medium", "temp":"low", "plant":"daisy", "weather":"dry", "forecast":"0", "watering":true},
+		{"stage":"medium", "temp":"low", "plant":"daisy", "weather":"dry", "forecast":"50", "watering":false},
+
+		{"stage":"medium", "temp":"low", "plant":"ground", "weather":"wet", "forecast":"0", "watering":false},
+		{"stage":"medium", "temp":"low", "plant":"ground", "weather":"wet", "forecast":"50", "watering":false},
+		{"stage":"medium", "temp":"low", "plant":"rock", "weather":"wet", "forecast":"0", "watering":false},
+		{"stage":"medium", "temp":"low", "plant":"rock", "weather":"wet", "forecast":"50", "watering":false},
+
+		{"stage":"medium", "temp":"low", "plant":"potato", "weather":"wet", "forecast":"0", "watering":false},
+		{"stage":"medium", "temp":"low", "plant":"potato", "weather":"wet", "forecast":"50", "watering":false},
+		{"stage":"medium", "temp":"low", "plant":"rose", "weather":"wet", "forecast":"0", "watering":false},
+		{"stage":"medium", "temp":"low", "plant":"rose", "weather":"wet", "forecast":"50", "watering":false},
+		{"stage":"medium", "temp":"low", "plant":"daisy", "weather":"wet", "forecast":"0", "watering":false},
+		{"stage":"medium", "temp":"low", "plant":"daisy", "weather":"wet", "forecast":"50", "watering":false},
+
+
+
+		{"stage":"old", "temp":"high", "plant":"ground", "weather":"dry", "forecast":"0", "watering":false},
+		{"stage":"old", "temp":"high", "plant":"ground", "weather":"dry", "forecast":"50", "watering":false},
+		{"stage":"old", "temp":"high", "plant":"rock", "weather":"dry", "forecast":"0", "watering":false},
+		{"stage":"old", "temp":"high", "plant":"rock", "weather":"dry", "forecast":"50", "watering":false},
+
+		{"stage":"old", "temp":"high", "plant":"potato", "weather":"dry", "forecast":"0", "watering":false},
+		{"stage":"old", "temp":"high", "plant":"potato", "weather":"dry", "forecast":"50", "watering":false},
+		{"stage":"old", "temp":"high", "plant":"rose", "weather":"dry", "forecast":"0", "watering":false},
+		{"stage":"old", "temp":"high", "plant":"rose", "weather":"dry", "forecast":"50", "watering":false},
+		{"stage":"old", "temp":"high", "plant":"daisy", "weather":"dry", "forecast":"0", "watering":false},
+		{"stage":"old", "temp":"high", "plant":"daisy", "weather":"dry", "forecast":"50", "watering":false},
+
+		{"stage":"old", "temp":"high", "plant":"ground", "weather":"wet", "forecast":"0", "watering":false},
+		{"stage":"old", "temp":"high", "plant":"ground", "weather":"wet", "forecast":"50", "watering":false},
+		{"stage":"old", "temp":"high", "plant":"rock", "weather":"wet", "forecast":"0", "watering":false},
+		{"stage":"old", "temp":"high", "plant":"rock", "weather":"wet", "forecast":"50", "watering":false},
+
+		{"stage":"old", "temp":"high", "plant":"potato", "weather":"wet", "forecast":"0", "watering":false},
+		{"stage":"old", "temp":"high", "plant":"potato", "weather":"wet", "forecast":"50", "watering":false},
+		{"stage":"old", "temp":"high", "plant":"rose", "weather":"wet", "forecast":"0", "watering":false},
+		{"stage":"old", "temp":"high", "plant":"rose", "weather":"wet", "forecast":"50", "watering":false},
+		{"stage":"old", "temp":"high", "plant":"daisy", "weather":"wet", "forecast":"0", "watering":false},
+		{"stage":"old", "temp":"high", "plant":"daisy", "weather":"wet", "forecast":"50", "watering":false},
+
+
+		{"stage":"old", "temp":"low", "plant":"ground", "weather":"dry", "forecast":"0", "watering":false},
+		{"stage":"old", "temp":"low", "plant":"ground", "weather":"dry", "forecast":"50", "watering":false},
+		{"stage":"old", "temp":"low", "plant":"rock", "weather":"dry", "forecast":"0", "watering":false},
+		{"stage":"old", "temp":"low", "plant":"rock", "weather":"dry", "forecast":"50", "watering":false},
+
+		{"stage":"old", "temp":"low", "plant":"potato", "weather":"dry", "forecast":"0", "watering":false},
+		{"stage":"old", "temp":"low", "plant":"potato", "weather":"dry", "forecast":"50", "watering":false},
+		{"stage":"old", "temp":"low", "plant":"rose", "weather":"dry", "forecast":"0", "watering":false},
+		{"stage":"old", "temp":"low", "plant":"rose", "weather":"dry", "forecast":"50", "watering":false},
+		{"stage":"old", "temp":"low", "plant":"daisy", "weather":"dry", "forecast":"0", "watering":false},
+		{"stage":"old", "temp":"low", "plant":"daisy", "weather":"dry", "forecast":"50", "watering":false},
+
+		{"stage":"old", "temp":"low", "plant":"ground", "weather":"wet", "forecast":"0", "watering":false},
+		{"stage":"old", "temp":"low", "plant":"ground", "weather":"wet", "forecast":"50", "watering":false},
+		{"stage":"old", "temp":"low", "plant":"rock", "weather":"wet", "forecast":"0", "watering":false},
+		{"stage":"old", "temp":"low", "plant":"rock", "weather":"wet", "forecast":"50", "watering":false},
+
+		{"stage":"old", "temp":"low", "plant":"potato", "weather":"wet", "forecast":"0", "watering":false},
+		{"stage":"old", "temp":"low", "plant":"potato", "weather":"wet", "forecast":"50", "watering":false},
+		{"stage":"old", "temp":"low", "plant":"rose", "weather":"wet", "forecast":"0", "watering":false},
+		{"stage":"old", "temp":"low", "plant":"rose", "weather":"wet", "forecast":"50", "watering":false},
+		{"stage":"old", "temp":"low", "plant":"daisy", "weather":"wet", "forecast":"0", "watering":false},
+		{"stage":"old", "temp":"low", "plant":"daisy", "weather":"wet", "forecast":"50", "watering":false}
 	]
 
 	let class_name = "watering"
-	let features = ["plant", "weather", "forecast"]
+	let features = ["stage", "temp", "plant", "weather", "forecast"]
 
 	dtreeWatering = new DTree(training_data, class_name, features)
 })

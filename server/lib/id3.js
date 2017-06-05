@@ -45,6 +45,10 @@ module.exports = (function() {
 		//Eksportuj drzewo:
 		toJSON: function() {
 			return model
+		},
+
+		load: function(json) {
+			model = JSON.parse(json)
 		}
 
 	}
