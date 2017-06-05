@@ -211,8 +211,8 @@ var move_actor_to = function(target_pos, dataset) {
 			let tmp, status;
 			tmp = aiResponse.ground[0].split(" ");
 			status = tmp[0] + "(" + tmp[3] + " ";
-			tmp += aiResponse.plant[0].split(" ");
-			status = tmp[0] + "(" + tmp[3] + " ";
+			tmp = aiResponse.plant[0].split(" ");
+			status += tmp[0] + "(" + tmp[3] + " ";
 			$('#details_ground_type').html(status);
 		} else {
 			$('#details_ground_type').html("???");
