@@ -7,7 +7,7 @@ max_y = 9;
 pole_min_cost = 1;
 pole_max_cost = 10;
 img_min_id = 1;
-img_max_id = 6;
+img_max_id = 7;
 pole = Array();
 actor_in_move = false;
 server_status = false;
@@ -105,7 +105,7 @@ var show_actor = function(actor_pos) {
 }
 
 var show_image = function(img_id) {
-	let imageUrl = "assets/images/flowers/" + img_id + ".jpg";
+	let imageUrl = "assets/images/photos/" + img_id + ".jpg";
 	$('#image_view').css('background-image', 'url(' + imageUrl + ')');
 }
 
@@ -208,9 +208,12 @@ var move_actor_to = function(target_pos, dataset) {
 	aiGroundType({imgId: image_id}, (res) => {
 		if(res.status == 'ok') {
 			let aiResponse = res.data.results;
-			let tmp = aiResponse[0].split(" ");
-			ground_type = tmp[0];
-			$('#details_ground_type').html(ground_type);
+			let tmp, status;
+			tmp = aiResponse.ground[0].split(" ");
+			status = tmp[0] + "(" + tmp[3] + " ";
+			tmp = aiResponse.plant[0].split(" ");
+			status = tmp[0] + "(" + tmp[3] + " ";
+			$('#details_ground_type').html(status);
 		} else {
 			$('#details_ground_type').html("???");
 		}
