@@ -113,6 +113,42 @@ app.get('/api/ground/:uid', (req, res) => {
 	})
 })
 
+app.get('/api/photo/:uid', (req, res) => {
+
+	let name = req.params.uid
+
+	let options = {
+	  scriptPath: 'network_ground/',
+	  args: ["../assets/images/photos/"+name+".png"]
+	}
+
+
+	PythonShell.run('label_image.py',options, function (err, result_ground) {
+		if (err) 
+			throw err;
+
+		let inOptions = {
+		  scriptPath: 'network/',
+		  args: ["../assets/images/photos/"+name+".jpg"]
+		}
+
+
+		PythonShell.run('label_image.py',inOptions, function (err, result_plant) {
+			if (err) 
+				throw err;
+		
+		  	res.json({
+				server: 'ok',
+				results: {
+					ground: result_ground,
+					plant: result_plant
+				}
+			})
+		})
+	  	
+	})
+})
+
 app.get('/api/ID3/:plant/:weather/:forecast/:temp/:stage', (req, res) => {
 
 	let predicted_class = dtreeWatering.predict({
