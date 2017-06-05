@@ -133,7 +133,7 @@ app.get('/api/photo/:uid', (req, res) => {
 		}
 
 
-		PythonShell.run('label_image.py',inOptions, function (err, result_plant) {
+		PythonShell.run('d_label_image.py',inOptions, function (err, result_plant) {
 			if (err) 
 				throw err;
 		
