@@ -119,7 +119,7 @@ app.get('/api/photo/:uid', (req, res) => {
 
 	let options = {
 	  scriptPath: 'network_ground/',
-	  args: ["../assets/images/photos/"+name+".png"]
+	  args: ["../assets/images/photos/"+name+".jpg"]
 	}
 
 
