@@ -2,12 +2,17 @@
 =            Global Vars            =
 ===================================*/
 
+randomData = {
+	forecast: 0,
+	temp: "low",
+	stage: "new"
+}
 max_x = 9;
 max_y = 9;
 pole_min_cost = 1;
-pole_max_cost = 10;
+pole_max_cost = 20;
 img_min_id = 1;
-img_max_id = 7;
+img_max_id = 12;
 pole = Array();
 actor_in_move = false;
 server_status = false;
@@ -205,16 +210,28 @@ var move_actor_to = function(target_pos, dataset) {
 	let data = dataset;
 
 	let image_id = dataset[target_pos.x][target_pos.y].image;
-	aiGroundType({imgId: image_id}, (res) => {
+
+	getAIdata({
+		imgId: image_id, 
+		forecast: randomData.forecast, 
+		temp: randomData.temp, 
+		stage: randomData.stage
+	}, (res) => {
 		if(res.status == 'ok') {
 			let aiResponse = res.data.results;
-			let tmp, status;
+			let tmp, status, actionWater;
+			actionWater = (aiResponse.decision) ? "Podlewam" : "Nie podlewam";
+
 			tmp = aiResponse.ground[0].split(" ");
 			status = tmp[0] + "(" + tmp[3] + " ";
+
 			tmp = aiResponse.plant[0].split(" ");
 			status += tmp[0] + "(" + tmp[3] + " ";
+
+			$('#details_ground_actionWater').html(actionWater);
 			$('#details_ground_type').html(status);
 		} else {
+			$('#details_ground_actionWater').html("???");
 			$('#details_ground_type').html("???");
 		}
 		

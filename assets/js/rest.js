@@ -43,14 +43,16 @@ var calcMove = function(req, next) {
 	});
 }
 
-var aiGroundType = function(req, next) {
+var getAIdata = function(req, next) {
 
 	let response = { status: 'fail' };
 	let serv_url = 'http://' + server_adr + ':' + server_port;
 	let img_uid = 1 * req.imgId;
-
+	let forecast = 1 * req.forecast;
+	let temp = req.temp;
+	let stage = req.stage;
 	$.ajax({
-	    url: serv_url + '/api/getData/' + img_uid,
+	    url: serv_url + '/api/getData/' + img_uid + '/' + forecast + '/' + temp + '/' + stage,
 	    type: 'GET',
 	    crossDomain: true,
 	    success: (res) => { 
