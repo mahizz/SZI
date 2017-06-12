@@ -5,6 +5,7 @@ var movment 		= require('./controllers/movment').Movment
 var conventers 		= require('./lib/conventers')
 var PythonShell 	= require('python-shell')
 var treeController 	= require('./controllers/treeControl')
+var Promise 		= require('bluebird')
 
 //Libs
 require('./lib/prototypes')
