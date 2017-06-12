@@ -218,7 +218,7 @@ var move_actor_to = function(target_pos, dataset) {
 		stage: randomData.stage
 	}, (res) => {
 		if(res.status == 'ok') {
-			let aiResponse = res;
+			let aiResponse = res.data;
 			let tmp, status, actionWater;
 			console.log(aiResponse);
 
