@@ -3,7 +3,7 @@
 ===================================*/
 
 randomData = {
-	forecast: 0,
+	forecast: "0",
 	temp: "low",
 	stage: "new"
 }
@@ -204,6 +204,7 @@ var move_actor_to = function(target_pos, dataset) {
 	console.log('Moving to', target_pos);
 
 	$('#details_ground_type').html("Loading...");
+	$('#details_ground_actionWater').html("Loading...");
 
 	let target = target_pos;
 	let current = actor_pos;
@@ -307,6 +308,21 @@ $('#button_turn_right').on('click', function(){
 $('#button_move').on('click', function(){
 	if(!actor_in_move)
 		move_actor();
+});
+
+$('#select_stage').change(function() {
+	var stage = $('option:selected', this).attr('value');
+	randomData.stage = stage;
+});
+
+$('#select_temp').change(function() {
+	var temp = $('option:selected', this).attr('value');
+	randomData.temp = temp;
+});
+
+$('#select_forecast').change(function() {
+	var forecast = $('option:selected', this).attr('value');
+	randomData.forecast = forecast;
 });
 
 $(document).keydown(function(e) {
