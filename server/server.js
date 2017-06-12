@@ -95,6 +95,7 @@ var checkImage = (data, callback) => {
 }
 
 var checkDecisionTree = (data, callback) => {
+	console.log(data)
 	callback(dtreeWatering.predict({
 		plant: data.plant,
 		weather: data.weather,
@@ -126,8 +127,10 @@ var loadTree = (callback) => {
 var calculateAll = (data, callback) => {
 	checkImage(data, (respImage) => {
 		let input = data
-		input.plant = respImage.results.plant
-		input.weather = respImage.results.ground
+		input.plant = respImage.results.plant[0].split(" ")
+		input.weather = respImage.results.ground[0].split(" ")
+		input.plant = input.plant[0]
+		input.weather = input.weather[0]
 		checkDecisionTree(respImage, (respDec) => {
 			callback({
 				decision: respDec,
