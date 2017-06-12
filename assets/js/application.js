@@ -218,10 +218,10 @@ var move_actor_to = function(target_pos, dataset) {
 		stage: randomData.stage
 	}, (res) => {
 		if(res.status == 'ok') {
-			let aiResponse = res.data.results;
+			let aiResponse = res;
 			let tmp, status, actionWater;
 			console.log(aiResponse);
-			
+
 			actionWater = (aiResponse.decision) ? "Podlewam" : "Nie podlewam";
 
 			tmp = aiResponse.ground[0].split(" ");
