@@ -136,6 +136,7 @@ var calculateAll = (data) => {
 	}
 
 	a1.then(resp => {
+		console.log(resp)
 		let input = {}
 		input = data
 		input.plant = resp.results.plant
