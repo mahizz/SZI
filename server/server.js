@@ -139,6 +139,7 @@ var calculateAll = (data, callback) => {
 		input.weather = input.weather[0]
 
 		checkDecisionTree(input, (respDec) => {
+			console.log(input)
 			callback({
 				decision: respDec,
 				plant: respImage.results.plant,
@@ -197,6 +198,7 @@ app.get('/api/retrainTree', (req, res) => {
 
 app.get('/api/getData/:uid/:forecast/:temp/:stage', (req, res) => {
 	calculateAll(req.params, (response) => {
+		console.log(response)
 		res.json(response)
 	})
 })

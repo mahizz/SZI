@@ -220,6 +220,8 @@ var move_actor_to = function(target_pos, dataset) {
 		if(res.status == 'ok') {
 			let aiResponse = res.data.results;
 			let tmp, status, actionWater;
+			console.log(aiResponse);
+			
 			actionWater = (aiResponse.decision) ? "Podlewam" : "Nie podlewam";
 
 			tmp = aiResponse.ground[0].split(" ");
