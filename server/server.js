@@ -32,17 +32,17 @@ app.use((req, res, next) => {
 =            Functions            =
 =================================*/
 
-var status = () => {
+var status = (callback) => {
 	let time = process.uptime()
     let uptime = (time + "").toHHMMSS()
 
-	return {
+	callback({
 		status: 'running',
 		uptime: uptime
-	}
+	})
 }
 
-var calcMove = (data) => {
+var calcMove = (data, callback) => {
 	let curr, target, dataset, direction
 	curr = data.current
 	target = data.target
@@ -55,10 +55,10 @@ var calcMove = (data) => {
 		direction: direction
 	}
 
-	return { actionList: conventers.convertToMovementList(movment(dataset, start, target)) }
+	callback({ actionList: conventers.convertToMovementList(movment(dataset, start, target)) })
 }
 
-var checkImage = (data) => {
+var checkImage = (data, callback) => {
 
 	let name = data.uid
 
@@ -82,71 +82,58 @@ var checkImage = (data) => {
 			if (err) 
 				throw err;
 		
-		  	return {
+		  	callback({
 				server: 'ok',
 				results: {
 					ground: result_ground,
 					plant: result_plant
 				}
-			}
+			})
 		})
 	  	
 	})
 }
 
-var checkDecisionTree = (data) => {
-	return predicted_class = dtreeWatering.predict({
+var checkDecisionTree = (data, callback) => {
+	callback(dtreeWatering.predict({
 		plant: data.plant,
 		weather: data.weather,
 		forecast: data.forecast,
 		temp: data.temp,
 		stage: data.stage
-	})
+	}))
 }
 
-var getTree = () => {
+var getTree = (callback) => {
 	let obj = dtreeWatering.toJSON()
-	return JSON.stringify(obj, null, 4)
+	callback(JSON.stringify(obj, null, 4))
 }
 
-var retrainTree = () => {
+var retrainTree = (callback) => {
 	treeController.trainTree((tree) => {
 		dtreeWatering = tree
 	})
-	return { status: 'ok' }
+	callback({ status: 'ok' })
 }
 
-var loadTree = () => {
+var loadTree = (callback) => {
 	treeController.loadTree((tree) => {
 		dtreeWatering = tree
 	})
-	return { status: 'ok' }
+	callback({ status: 'ok' })
 }
 
-var calculateAll = (data) => {
-
-	let a1 = new Promise((resolve, reject) => {
-		resolve(checkImage(data))
-	})
-
-	let a2 = (ins) => {
-		return new Promise((resolve, reject) => {
-			resolve(checkDecisionTree(ins))
-		})
-	}
-
-	a1.then(resp => {
-		console.log(resp)
-		let input = {}
-		input = data
-		input.plant = resp.results.plant
-		input.weather = resp.results.ground
-		a2(input).then(res => {
-			return {
-				decision: res,
-				plant: resp.results.plant,
-				ground: resp.results.ground
-			}
+var calculateAll = (data, callback) => {
+	checkImage(data, (respImage) => {
+		let input = data
+		input.plant = respImage.results.plant
+		input.weather = respImage.results.ground
+		checkDecisionTree(respImage, (respDec) => {
+			callback({
+				decision: respDec,
+				plant: respImage.results.plant,
+				ground: respImage.results.ground
+			})
 		})
 	})
 }
@@ -162,32 +149,46 @@ app.get('/', (req, res) => {
 })
 
 app.get('/status', (req, res) => {
-	res.json(status())
+	status((response)=>{
+		res.json(response)
+	})
 })
 
 app.post('/api/calcMove', (req, res) => {
-	res.json(calcMove(req.body))
+	calcMove(req.body, (response) => {
+		res.json(response)
+	})
 })
 
 app.get('/api/photo/:uid', (req, res) => {
-	res.json(checkImage(req.params))
+	checkImage(req.params, (response) => {
+		res.json(response)
+	})
 })
 
 app.get('/api/ID3/:plant/:weather/:forecast/:temp/:stage', (req, res) => {
-	res.json(checkDecisionTree(req.params))
+	checkDecisionTree(req.params, (response) => {
+		res.json(response)
+	})
 })
 
 app.get('/api/getTree', (req, res) => {
     res.header("Content-Type",'application/json')
-	res.send(getTree())
+	getTree((response) => {
+		res.send(response)
+	})
 })
 
 app.get('/api/retrainTree', (req, res) => {
-	res.json(retrainTree())
+	retrainTree((response) => {
+		res.json(response)
+	})
 })
 
 app.get('/api/getData/:uid/:forecast/:temp/:stage', (req, res) => {
-	res.json(calculateAll(req.params))
+	calculateAll(req.params, (response) => {
+		res.json(response)
+	})
 })
 
 
@@ -199,6 +200,6 @@ app.get('/api/getData/:uid/:forecast/:temp/:stage', (req, res) => {
 
 app.listen(_port, function () {
 	console.log('Server running at', _port)
-	loadTree()
+	loadTree((response) => {})
 })
 
