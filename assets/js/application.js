@@ -220,7 +220,7 @@ var move_actor_to = function(target_pos, dataset) {
 		if(res.status == 'ok') {
 			let aiResponse = res.data;
 			let tmp, status, actionWater;
-			console.log(aiResponse);
+			//console.log(aiResponse);
 
 			actionWater = (aiResponse.decision) ? "Podlewam" : "Nie podlewam";
 
@@ -272,22 +272,11 @@ var get_details = function(pos, dataset) {
 	$('#details_cords').html('');
 	$('#details_image_id').html('');
 	$('#details_cost').html('');
-	$('#action_list').html('');
 
 	$('#details_actor_direction').html(actor_direction);
 	$('#details_cords').html(cords);
 	$('#details_image_id').html(image_id);
-	$('#details_cost').html(cost);
-
-	if(actions.length == 0) {
-		$('#action_list').append('<li> Brak </li>');
-	} else {
-		actions.forEach((row, index, arr) => {
-			let elem = '<li>' + row + '</li>';
-			$('#action_list').append(elem);
-		});
-	}
-	
+	$('#details_cost').html(cost);	
 }
 
 
