@@ -50,7 +50,7 @@ var aiGroundType = function(req, next) {
 	let img_uid = 1 * req.imgId;
 
 	$.ajax({
-	    url: serv_url + '/api/photo/' + img_uid,
+	    url: serv_url + '/api/getData/' + img_uid,
 	    type: 'GET',
 	    crossDomain: true,
 	    success: (res) => { 

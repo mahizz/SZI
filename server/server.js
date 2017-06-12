@@ -25,97 +25,41 @@ app.use((req, res, next) => {
 })
 
 
-//    network/flower_photos/final/daisy_test.jpg
 
 
-app.get('/', (req, res) => {
+/*=================================
+=            Functions            =
+=================================*/
 
+var status = () => {
 	let time = process.uptime()
     let uptime = (time + "").toHHMMSS()
 
-	res.json({
-		server: 'ok'
-	})
-})
-
-app.get('/status', (req, res) => {
-
-	let time = process.uptime()
-    let uptime = (time + "").toHHMMSS()
-
-	res.json({
+	return {
 		status: 'running',
 		uptime: uptime
-	})
-})
+	}
+}
 
-app.post('/api/calcMove', (req, res) => {
+var calcMove = (data) => {
+	let curr, target, dataset, direction
+	curr = data.current
+	target = data.target
+	dataset = data.dataset
+	direction = data.direction
 
-	let curr, target, dataset;
-	curr = req.body.current;
-	target = req.body.target;
-	dataset = req.body.dataset;
-	direction = req.body.direction;
-
-	console.log("direction: ",direction)
-	console.log("Current position: ", curr)
-	console.log("Target position: ", target)
 	let start = {
 		x: parseInt(curr.x),
 		y: parseInt(curr.y),
 		direction: direction
 	}
 
-	//Sending data
-	res.json({
-		actionList: conventers.convertToMovementList(movment(dataset,start,target))	
-	})
-})
+	return { actionList: conventers.convertToMovementList(movment(dataset, start, target)) }
+}
 
-app.get('/api/plants/:uid', (req, res) => {
-	
-	let name = req.params.uid
-	let options = {
-	  scriptPath: 'network/',
-	  args: ["../assets/images/flowers/"+name+".jpg"]
-	};
+var checkImage = (data) => {
 
-	PythonShell.run('d_label_image.py',options, function (err, results) {
-		if (err) throw err
-
-	  	res.json({
-			server: 'ok',
-			results: results
-		})
-	});
-
-
-})
-
-app.get('/api/ground/:uid', (req, res) => {
-
-	let name = req.params.uid
-
-	let options = {
-	  scriptPath: 'network_ground/',
-	  args: ["../assets/images/grounds/"+name+".jpg"]
-	}
-
-
-	PythonShell.run('label_image.py',options, function (err, results) {
-		if (err) 
-			throw err;
-	
-	  	res.json({
-			server: 'ok',
-			results: results
-		})
-	})
-})
-
-app.get('/api/photo/:uid', (req, res) => {
-
-	let name = req.params.uid
+	let name = data.uid
 
 	let options = {
 	  scriptPath: 'network_ground/',
@@ -137,48 +81,120 @@ app.get('/api/photo/:uid', (req, res) => {
 			if (err) 
 				throw err;
 		
-		  	res.json({
+		  	return {
 				server: 'ok',
 				results: {
 					ground: result_ground,
 					plant: result_plant
 				}
-			})
+			}
 		})
 	  	
 	})
-})
+}
 
-app.get('/api/ID3/:plant/:weather/:forecast/:temp/:stage', (req, res) => {
-
-	let predicted_class = dtreeWatering.predict({
-		plant: req.params.plant,
-		weather: req.params.weather,
-		forecast: req.params.forecast,
-		temp: req.params.temp,
-		stage: req.params.stage
+var checkDecisionTree = (data) => {
+	return predicted_class = dtreeWatering.predict({
+		plant: data.plant,
+		weather: data.weather,
+		forecast: data.forecast,
+		temp: data.temp,
+		stage: data.stage
 	})
+}
 
-	res.json(predicted_class)
-})
+var getTree = () => {
+	let obj = dtreeWatering.toJSON()
+	return JSON.stringify(obj, null, 4)
+}
 
-app.get('/api/getTree', (req, res) => {
-    let obj = dtreeWatering.toJSON()
-	res.header("Content-Type",'application/json')
-	res.send(JSON.stringify(obj, null, 4))
-})
-
-app.get('/api/retrainTree', (req, res) => {
+var retrainTree = () => {
 	treeController.trainTree((tree) => {
 		dtreeWatering = tree
 	})
-})
+	return { status: 'ok' }
+}
 
-
-app.listen(_port, function () {
-	console.log('Server running at', _port)
+var loadTree = () => {
 	treeController.loadTree((tree) => {
 		dtreeWatering = tree
 	})
+	return { status: 'ok' }
+}
+
+var calculateAll = (data) => {
+	let a1 = new Promise((resolve, reject) => {
+		resolve(checkImage(data))
+	})
+
+	let a2 = (ins) => {
+		return new Promise((resolve, reject) => {
+			resolve(checkDecisionTree(ins))
+		})
+	}
+
+	a1.then(resp => {
+		let input = data
+		input.plant = resp.results.plant
+		input.weather = resp.results.ground
+		a2(input).then(res => {
+			return {
+				decision: res,
+				plant: resp.results.plant,
+				ground: resp.results.ground
+			}
+		})
+	})
+}
+
+
+
+/*====================================
+=            Api handlers            =
+====================================*/
+
+app.get('/', (req, res) => {
+	res.json({ server: 'ok' })
+})
+
+app.get('/status', (req, res) => {
+	res.json(status())
+})
+
+app.post('/api/calcMove', (req, res) => {
+	res.json(calcMove(req.body))
+})
+
+app.get('/api/photo/:uid', (req, res) => {
+	res.json(checkImage(req.params))
+})
+
+app.get('/api/ID3/:plant/:weather/:forecast/:temp/:stage', (req, res) => {
+	res.json(checkDecisionTree(req.params))
+})
+
+app.get('/api/getTree', (req, res) => {
+    res.header("Content-Type",'application/json')
+	res.send(getTree())
+})
+
+app.get('/api/retrainTree', (req, res) => {
+	res.json(retrainTree())
+})
+
+app.get('/api/getData/:uid/:forecast/:temp/:stage', (req, res) => {
+	res.json(calculateAll(req.params))
+})
+
+
+
+
+/*============================
+=            Init            =
+============================*/
+
+app.listen(_port, function () {
+	console.log('Server running at', _port)
+	loadTree()
 })
 
