@@ -126,12 +126,19 @@ var loadTree = (callback) => {
 
 var calculateAll = (data, callback) => {
 	checkImage(data, (respImage) => {
-		let input = data
+		
+		let input = {
+			forecast: data.forecast,
+			temp: data.temp,
+			stage: data.stage
+		}
 		input.plant = respImage.results.plant[0].split(" ")
 		input.weather = respImage.results.ground[0].split(" ")
+
 		input.plant = input.plant[0]
 		input.weather = input.weather[0]
-		checkDecisionTree(respImage, (respDec) => {
+
+		checkDecisionTree(input, (respDec) => {
 			callback({
 				decision: respDec,
 				plant: respImage.results.plant,
