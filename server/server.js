@@ -124,6 +124,7 @@ var loadTree = () => {
 }
 
 var calculateAll = (data) => {
+
 	let a1 = new Promise((resolve, reject) => {
 		resolve(checkImage(data))
 	})
@@ -135,7 +136,8 @@ var calculateAll = (data) => {
 	}
 
 	a1.then(resp => {
-		let input = data
+		let input = {}
+		input = data
 		input.plant = resp.results.plant
 		input.weather = resp.results.ground
 		a2(input).then(res => {
